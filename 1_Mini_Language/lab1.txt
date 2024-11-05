@@ -1,0 +1,87 @@
+Language Specification:
+1 .Language Definition:
+1.1 Alphabet:
+1.1.a. Upper (A-Z) and lower case letters (a-z) of the English alphabet. 
+b. Underline character '_'
+c. Decimal digits (0-9);
+Lexic:
+a.Special symbols, representing:
+- operators + - * / := < <= = >=
+-separators [ ] { }  : ; space
+- reserved words: array char const do else if int of program read  then var while write
+b. identifiers
+-a sequence of letters and  digits ,such that the first character is a letter; the rule is:
+identifier ::= letter | letter sub_identifier
+letter ::= "A" | "B" | . ..| "Z" | “a” | “b” | … |”z”|
+digit ::= "0" | "1" |...| "9"
+non_zero::= ”1” | “2” | … |”9”
+underline::= “_”
+Sub_identifier::= digit | letter| “_”| digit sub_identifier| letter sub_identifier| “_” sub_identifier
+
+
+c. constants
+1.integer - rule:
+integer::=    (“-”|”+”)?non_zero{digit} |”0”
+2.character
+character:='letter'|'digit'
+3.string
+constchar:="string"
+string:=char{string}
+char:=letter|digit
+
+
+2.2 Syntax: The words - predefined tokens are specified between " and ":
+ a) Sintactical rules: 
+program ::= "BEGIN" decllist ";" cmpdstmt "."
+ decllist ::= declaration | declaration ";" decllist 
+declaration ::= IDENTIFIER ":" type
+ type1 ::= "BOOLEAN" | "CHAR" | "INTEGER" | "REAL"
+ arraydecl ::= "ARRAY" "[" nr "]" "OF" type1 
+
+arrayElementAccess::= identifier "[" (identifier|length) "]"
+
+type ::= type1|arraydecl 
+cmpdstmt ::= "BEGIN" stmtlist "END" 
+stmtlist ::= stmt | stmt ";" stmtlist 
+stmt ::= simplstmt | structstmt 
+simplstmt ::= assignstmt | iostmt 
+assignstmt ::= identifier ":=" expression
+ expression ::= expression "+" term | term 
+ expression ::= expression "-" term | term
+
+
+term ::= term "*" factor | factor 
+term ::= term "/" factor | factor 
+term ::= term "%" factor | factor 
+
+factor ::= "(" expression ")" | IDENTIFIER
+ iostmt ::= "READ"  "(" IDENTIFIER ")" | "WRITE" "(" IDENTIFIER|STRING|CHAR ")"
+structstmt ::= cmpdstmt | ifstmt | whilestmt 
+ifstmt ::= "IF" condition "THEN" stmt ["ELSE" stmt] 
+whilestmt ::= "WHILE" condition "DO" stmt 
+forstmt ::= "FOR" condition "DO" stmt                   //==while
+condition ::= expression RELATION expression 
+RELATION ::= "<" | "<=" | "=" | "<>" | ">=" | ">" | "!="
+
+
+
+
+b) Greatest common divisor of X and Y
+
+
+BEGIN
+  X, Y, Z:INTEGER; 
+
+
+  READ(X);
+  READ(Y);
+
+
+   WHILE X != Y DO BEGIN
+			IF X>Y THEN X:=X-Y
+			ELSE	Y:=Y-Z
+		   END
+  
+WRITE(X)
+
+END
