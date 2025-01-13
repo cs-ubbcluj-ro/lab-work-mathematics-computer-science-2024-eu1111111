@@ -1,0 +1,48 @@
+G = (N, Σ, P, S)
+
+
+N = {program, decllist, declaration, type1, arraydecl,arrayselect, type,cmpdstmt, stmtlist,
+ stmt, simplstm, assignstmt, expression, term, factor, iostmt, constant, structstmt, 
+ ifstmt, forstmt, whilestmt, condition, relation }
+
+Σ = { +, -, *, /, =, <, <=, !=, >=, <>, [, ], :, ;, space, array, char, const,
+ do, else, if, int, of, program, read, then, var, while, write }
+
+P = {
+identifier = letter | letter sub_identifier ,
+letter = "A" | "B" | . ..| "Z"| ”a” | ”b” | … |”z”| ,
+digit = "0" | "1" |...| "9" ,
+non_zero ::= “1” | “2” | … | “9”,
+integer ::= ("-"|"+")?non_zero{digit}|"0" ,
+underline ::="_" , 
+sub_identifier ::= (leter|"_"|digit) sub_identifier,
+character:='letter'|'digit',,
+string =char{string} ,
+char =letter | digit ,
+bool =”true” | “false”,
+double= no[“,”{digit}],
+program = "VAR" decllist ";" cmpdstmt ,
+decllist = declaration | declaration ";" decllist ,
+declaration = type ”:” IDENTIFIER ,
+type1 = "bool" | "char" | "int" | "double" | “string” ,
+arraydecl = "array" "[" nr "]" "of" type1 ,
+arrayselect = IDENTIFIER “[” no “]” | IDENTIFIER“[” IDENTIFIER “]”,
+type = type1|arraydecl ,
+cmpdstmt = stmtlist ,
+stmtlist = stmt “;”| stmt ";" stmtlist ,
+stmt = simplstmt | structstmt ,
+simplstmt = assignstmt | iostmt ,
+assignstmt = IDENTIFIER "=" expression ,
+expression = expression ("+" | “-”) term | term ,
+term = term ("*" | “/)” factor | factor ,
+factor = "(" expression ")" | IDENTIFIER [(“+” | “-” | “*” | “/”) constant]? | constant ,
+iostmt = "READ" "+""(" IDENTIFIER ")""+" | "WRITE" "-""(" IDENTIFIER ")""-" | “WRITE”  "-""("constant")""-"  ,
+structstmt = cmpdstmt | ifstmt | whilestmt ,
+ifstmt = "if" condition "then" “{” stmt “}” ["else" “{”stmt “}”] ,
+forstmt = “for” condition “{” stmt “}” ,
+whilestmt = "WHILE" condition "DO" “{” stmt “}” ,
+condition = expression RELATION expression ,
+ RELATION = "<" | "<=" | "==" | "<>" | ">=" | ">",
+}
+
+S = { program }
