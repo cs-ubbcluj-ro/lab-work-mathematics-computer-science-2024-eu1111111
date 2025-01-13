@@ -1,0 +1,16 @@
+BEGIN
+  X, Y, Z:INTEGER; 
+
+
+  READ(X);
+  READ(Y);
+
+
+   WHILE X != Y DO BEGIN
+			IF X>Y THEN X:=X-Y
+			ELSE	Y:=Y-Z
+		   END
+  
+WRITE(X)
+
+END

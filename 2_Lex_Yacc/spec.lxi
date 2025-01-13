@@ -1,0 +1,121 @@
+%{
+
+#include "Utile.h"
+
+%}
+
+%option noyywrap
+%option caseless
+%option yylineno
+
+LETTER		[A-Za-z_]
+DIGIT	[0-9]
+NZ-DIGIT    [1-9] 
+ZERO        [0]      
+IDENTIFIER	{LETTER}({LETTER}|{DIGIT})*
+NON-ZERO-NUMBER	{NZ-DIGIT}+{DIGIT}*|{ZERO}
+REAL-NUM	{NON-ZERO-NUMBER}"."{NON-ZERO-NUMBER} *
+DELIMIT  	[;.,:]
+STRING		[\"][^\n]*[\"]
+CHAR	"'"[^\n]"'"
+ERR_DIGIT_START [0-9]+[a-zA-Z0-9]*
+
+
+DOT             "\."
+COLON           "\:"
+SEMICOLON       ";"
+COMMA           "\,"
+
+%%
+
+[ \t\n]
+[0-9]+[a-zA-Z]+[a-zA-Z0-9]* {printf("Error - identifier begins with digit %s at line %d \n", yytext, yylineno);}
+
+
+begin		{addFIP(12,-1,fip); printf("%d\n", 12);}
+const		{addFIP(13,-1,fip);printf("%d\n", 13);}
+do		    {addFIP(14,-1,fip);printf("%d\n", 14);}
+else		{addFIP(15,-1,fip);printf("%d\n", 15);}
+if		    {addFIP(17,-1,fip);printf("%d\n", 17);}
+
+read		{addFIP(19,-1,fip);printf("%d\n", 19);}
+var		    {addFIP(22,-1,fip);printf("%d\n", 22);}
+while		{addFIP(23,-1,fip);printf("%d", 23);}
+for         {addFIP(26,-1,fip);printf("%d\n", 26);}
+to          {addFIP(27,-1,fip);printf("%d\n", 27);}
+":="        {addFIP(200,-1,fip);printf("%d\n", 200);}
+
+\( 		   {addFIP(101,-1,fip);printf("%d\n", 101);}
+\)         {addFIP(102,-1,fip);printf("%d\n", 102);}
+\;         {addFIP(103,-1,fip);printf("%d\n", 103);}   
+\,         {addFIP(104,-1,fip);printf("%d\n", 104);}
+\.         {addFIP(105,-1,fip);printf("%d\n", 105);}
+\:         {addFIP(106,-1,fip);printf("%d\n", 106);}    
+
+\+ 		{addFIP(300,-1,fip);printf("\%d\n", 300);}
+\-		{addFIP(301,-1,fip);printf("\%d\n", 301);}
+
+
+
+char		{addFIP(28,-1,fip);printf("%d\n", 28);}
+integer		{addFIP(29,-1,fip);printf("%d\n", 29);}
+real		{addFIP(30,-1,fip);printf("%d\n", 30);}
+
+
+
+
+or		    {addFIP(20,-1,fip);printf("%d\n", 20);}
+and		    {addFIP(19,-1,fip);printf("%d\n", 19);}
+then		    {addFIP(43,-1,fip);printf("%d\n", 43);}
+begin		    {addFIP(44,-1,fip);printf("%d\n", 44);}
+end		    {addFIP(45,-1,fip);printf("%d\n", 45);}
+write		    {addFIP(46,-1,fip);printf("%d\n", 46);}
+boolean		    {addFIP(47,-1,fip);printf("%d\n", 47);}
+
+{IDENTIFIER}	{addFIP(0,pozST++,fip);printf("%d\n", 0);}
+
+
+{REAL-NUM}	{
+			addFIP(1,pozST++,fip);
+			printf("%d\n", 1);
+		}
+		
+
+		
+"'"[^\n]"'"	{
+			addFIP(1,pozST++,fip);
+			printf("%d\n", 1);
+		}
+{STRING}	{addFIP(1,pozST++,fip);printf("%d\n", 1);}
+
+"<"          {addFIP(400,-1,fip);printf("%d\n", 400);}
+">"          {addFIP(401,-1,fip);printf("%d\n", 401);}
+
+. printf("Eroare %s\n la linia %d", yytext, +yylineno);
+
+%%
+void  yyerror(char *s)
+{
+  printf("%s\n", s);
+}
+
+
+extern FILE *yyin;
+
+
+
+
+int main(int argc, char **argv)
+{
+
+	++argv, --argc;
+	if (argc>0)
+   		yyin=fopen(argv[0],"r");
+   yylex();
+        printFIP(fip);
+		printST(ST);
+
+	return 0;
+}
+
+
